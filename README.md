@@ -12,6 +12,7 @@ Obs: Usarei o MongoDB. por que acredito que ele seria ideal para esse tipo de pr
 * Autenticação por token JWT.
 * Retornar todas corridas concluidas pelo mototáxista.
 * Retornar todas corridas abertas pelo passageiro.
-* Retornar corridas abertas em uma deteminada cidade.
-* Retornar corridas abertas em uma deteminado bairro.
-* Permitir que o passageiro alterer o estado da corrida(aberto/fechado/cancelado).
+* Retornar corridas aberto em uma deteminada cidade.
+* Retornar corridas aberto em uma deteminado bairro.
+* Permitir que o passageiro altere o estado da corrida(aberto/fechado/cancelado).
+* Permitir que o mototáxista pegue uma corrida.
