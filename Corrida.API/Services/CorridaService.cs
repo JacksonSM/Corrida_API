@@ -18,33 +18,59 @@ public class CorridaService : ICorridaService
             (settings.Value.CorridaCollectionName);
     }
 
-    public async Task Criar(Corrida novaCorrida) =>
+    public async Task Abrir(Corrida novaCorrida) =>
     await _corridaCollection.InsertOneAsync(novaCorrida);
 
-    public async Task AtulizarEstado(string corridaId, string estado)
+    public async Task AtulizarEstado(string corridaId, string estado, float? estrela)
     {
-        var update = Builders<Corrida>.Update
-            .Set(c => c.Estado, estado);
-        await _corridaCollection.UpdateOneAsync(c => c.Id == corridaId, update);       
+        var corrida = await _corridaCollection.Find(x => x.Id == corridaId).FirstOrDefaultAsync();
+        if (corrida is null) throw new Exception("Corrida não existe.");
+
+        if (estado == "fechado")
+        {
+            var atualizacoes = Builders<Corrida>.Update
+                .Set(c => c.Estado, estado)
+                .Set(c => c.Estrelas, estrela);
+            await _corridaCollection.UpdateOneAsync(c => c.Id == corridaId, atualizacoes);
+        }
+        else
+        {
+            var atualizacoes = Builders<Corrida>.Update
+                .Set(c => c.Estado, estado);
+            await _corridaCollection.UpdateOneAsync(c => c.Id == corridaId, atualizacoes);
+        }                      
     }
     public async Task PegarCorrida(string corridaId, int mototaxistaId)
     {
+        var corrida = await _corridaCollection.FindAsync(c => c.Id == corridaId);
+        if (corrida is null) throw new Exception("Corrida não existe");
+
         var update = Builders<Corrida>.Update
              .Set(c => c.MotoTaxistaId, mototaxistaId);
         await _corridaCollection.UpdateOneAsync(c => c.Id == corridaId, update);
     }
 
-    public async Task ObterTodasCorridaBairro(string bairro) =>
-        await _corridaCollection.FindAsync(c => c.Origem.Bairro.Equals(bairro));
+    public async Task<IEnumerable<Corrida>> ObterTodasCorridaBairro(string bairro)
+    {
+       var corridas =  await _corridaCollection.FindAsync(c => c.Origem.Bairro.Equals(bairro) && c.Estado == "aberto");
+       return corridas.ToEnumerable();
+    }
 
 
-    public async Task ObterTodasCorridaCidade(string cidade) =>
-        await _corridaCollection.FindAsync(c => c.Origem.Cidade.Equals(cidade));
+    public async Task<IEnumerable<Corrida>> ObterTodasCorridaCidade(string cidade)
+    {
+        var corridas = await _corridaCollection.FindAsync(c => c.Origem.Cidade.Equals(cidade) && c.Estado == "aberto");
+        return corridas.ToEnumerable();
+    }
 
-    public async Task ObterTodasCorridaMototaxista(int mototaxistaId) =>
-        await _corridaCollection.FindAsync(c => c.MotoTaxistaId == mototaxistaId);
-
-    public async Task ObterTodasCorridaPassageiro(int passageiroId) => 
-       await _corridaCollection.FindAsync(c => c.PassageiroId == passageiroId);
-
+    public async Task<IEnumerable<Corrida>> ObterTodasCorridaMototaxista(int mototaxistaId)
+    {
+        var corridas = await _corridaCollection.FindAsync(c => c.MotoTaxistaId == mototaxistaId);
+        return corridas.ToEnumerable();
+    }
+    public async Task<IEnumerable<Corrida>> ObterTodasCorridaPassageiro(int passageiroId)
+    {
+        var corridas = await _corridaCollection.FindAsync(c => c.PassageiroId == passageiroId);
+        return corridas.ToEnumerable();
+    }
 }

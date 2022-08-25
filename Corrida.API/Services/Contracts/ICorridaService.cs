@@ -4,12 +4,12 @@ namespace CorridaAPI.Services.Contracts;
 
 public interface ICorridaService
 {
-    Task Criar(Corrida novaCorrida);
-    Task AtulizarEstado(string corridaId, string estado);
+    Task Abrir(Corrida novaCorrida);
+    Task AtulizarEstado(string corridaId, string estado, float? estrela);
     Task PegarCorrida(string corridaId, int mototaxistaId);
 
-    Task ObterTodasCorridaMototaxista(int mototaxistaId);
-    Task ObterTodasCorridaPassageiro(int passageiroId);
-    Task ObterTodasCorridaCidade(string cidade);
-    Task ObterTodasCorridaBairro(string bairro);
+    Task<IEnumerable<Corrida>> ObterTodasCorridaMototaxista(int mototaxistaId);
+    Task<IEnumerable<Corrida>> ObterTodasCorridaPassageiro(int passageiroId);
+    Task<IEnumerable<Corrida>> ObterTodasCorridaCidade(string cidade);
+    Task<IEnumerable<Corrida>> ObterTodasCorridaBairro(string bairro);
 }
