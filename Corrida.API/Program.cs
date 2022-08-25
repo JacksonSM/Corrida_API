@@ -1,6 +1,10 @@
+using CorridaAPI.Services.Helpers;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.Configure<CarridaDatabaseSettings>
+    (builder.Configuration.GetSection("ConnectMongoDB"));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

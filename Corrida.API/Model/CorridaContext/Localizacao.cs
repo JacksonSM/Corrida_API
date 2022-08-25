@@ -1,4 +1,4 @@
-﻿namespace Corrida.API.Model.CorridaContext
+﻿namespace CorridaAPI.Model.CorridaContext
 {
     public class Localizacao
     {
