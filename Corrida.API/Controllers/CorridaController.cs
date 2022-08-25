@@ -58,18 +58,24 @@ namespace CorridaAPI.Controllers
         public async Task<IActionResult> ObterTodasCorridaPassageiro(int passageiroId)
         {
             var corridas = await _corridaService.ObterTodasCorridaPassageiro(passageiroId);
+            if(corridas is null || corridas.Count() == 0) return NoContent();
+
             return Ok(corridas);
         }
         [HttpGet("ObterTodasCorridaCidade")]
         public async Task<IActionResult> ObterTodasCorridaCidade(string cidade)
         {
             var corridas = await _corridaService.ObterTodasCorridaCidade(cidade);
+            if (corridas is null || corridas.Count() == 0) return NoContent();
+
             return Ok(corridas);
         }
         [HttpGet("ObterTodasCorridaBairro")]
         public async Task<IActionResult> ObterTodasCorridaBairro(string bairro)
         {
             var corridas = await _corridaService.ObterTodasCorridaBairro(bairro);
+            if (corridas is null || corridas.Count() == 0) return NoContent();
+
             return Ok(corridas);
         }
     }
