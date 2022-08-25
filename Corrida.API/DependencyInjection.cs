@@ -1,9 +1,12 @@
-﻿using CorridaAPI.Services;
+﻿using CorridaAPI.Authentication.Identity;
+using CorridaAPI.Data;
+using CorridaAPI.Services;
 using CorridaAPI.Services.Contracts;
 using CorridaAPI.Services.Helpers;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace CorridaAPI.Data;
+namespace CorridaAPI;
 
 public static class DependencyInjection
 {
@@ -21,8 +24,16 @@ public static class DependencyInjection
 
         services.AddDbContext<CorridaContext>(cfg =>
         {
-            cfg.UseSqlite("Data Source=Data\\CorridaUsers.db");       
+            cfg.UseSqlite("Data Source=Data\\CorridaUsers.db");
         });
+
+        return services;
+    }
+    public static IServiceCollection AddAuthDependency(this IServiceCollection services)
+    {
+        services.AddIdentity<ApplicationUser, IdentityRole>()
+            .AddEntityFrameworkStores<CorridaContext>()
+            .AddDefaultTokenProviders();
 
         return services;
     }

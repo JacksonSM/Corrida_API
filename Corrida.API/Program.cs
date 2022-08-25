@@ -1,12 +1,10 @@
-using CorridaAPI.Data;
-using CorridaAPI.Services;
-using CorridaAPI.Services.Contracts;
-using CorridaAPI.Services.Helpers;
+using CorridaAPI;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDatabaseDependency(builder.Configuration);
 builder.Services.AddServiceDependency();
+builder.Services.AddAuthDependency();
 
 
 builder.Services.AddControllers();
