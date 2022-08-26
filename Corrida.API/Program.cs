@@ -4,7 +4,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDatabaseDependency(builder.Configuration);
 builder.Services.AddServiceDependency();
-builder.Services.AddAuthDependency();
+builder.Services.AddAuthDependency(builder.Configuration);
 
 
 builder.Services.AddControllers();
@@ -23,6 +23,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseStatusCodePages();
+
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

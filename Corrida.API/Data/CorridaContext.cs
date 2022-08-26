@@ -1,4 +1,4 @@
-﻿using CorridaAPI.Authentication.Identity;
+﻿using CorridaAPI.Model.Authentication;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 

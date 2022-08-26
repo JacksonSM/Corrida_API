@@ -1,8 +1,11 @@
-﻿using CorridaAPI.Authentication.Identity;
-using CorridaAPI.Model.Authentication;
+﻿using CorridaAPI.Model.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace CorridaAPI.Controllers;
 
@@ -23,13 +26,17 @@ public class AuthController : ControllerBase
 
 
     [HttpPost("login")]
-    public IActionResult Login(UsuarioModel usuario)
+    public IActionResult Login([FromServices] IConfiguration configuration, UsuarioModel usuario)
     {
         var result =  _signInManager.PasswordSignInAsync(usuario.Email,
             usuario.Senha, false, lockoutOnFailure: false).Result;
+
         if (result.Succeeded)
-        {
-            return Ok("Login feito com sucesso");
+        {       
+            var applicationUser = _userManager.Users.FirstOrDefault(x => x.Email == usuario.Email);
+            _signInManager.SignOutAsync();
+      
+            return Ok(GerarToken(applicationUser, configuration));
         }
         else
         {
@@ -49,6 +56,7 @@ public class AuthController : ControllerBase
         if (resultado.Succeeded)
         {
              _signInManager.SignInAsync(applicationUser, isPersistent: false);
+
             return Ok(usuario);
         }
         else
@@ -57,6 +65,33 @@ public class AuthController : ControllerBase
         }
 
         
+    }
+    private TokenModel GerarToken(ApplicationUser usuario,IConfiguration configuration)
+    {
+        var claims = new[] {
+                new Claim(JwtRegisteredClaimNames.Email, usuario.Email),
+                new Claim(JwtRegisteredClaimNames.Sub, usuario.Id)
+        };        
+
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["SecurityKey"])); 
+        var sign = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+        var exp = DateTime.UtcNow.AddHours(1);
+
+        JwtSecurityToken token = new JwtSecurityToken(
+            issuer: null,
+            audience: null,
+            claims: claims,
+            expires: exp,
+            signingCredentials: sign
+        );
+
+        var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+
+      
+
+        var tokenModel = new TokenModel { Token = tokenString, Expiration = exp};
+
+        return tokenModel;
     }
 
 }

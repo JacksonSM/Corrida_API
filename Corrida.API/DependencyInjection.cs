@@ -1,10 +1,14 @@
-﻿using CorridaAPI.Authentication.Identity;
-using CorridaAPI.Data;
+﻿using CorridaAPI.Data;
+using CorridaAPI.Model.Authentication;
 using CorridaAPI.Services;
 using CorridaAPI.Services.Contracts;
 using CorridaAPI.Services.Helpers;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace CorridaAPI;
 
@@ -29,11 +33,35 @@ public static class DependencyInjection
 
         return services;
     }
-    public static IServiceCollection AddAuthDependency(this IServiceCollection services)
+    public static IServiceCollection AddAuthDependency(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddIdentity<ApplicationUser, IdentityRole>()
             .AddEntityFrameworkStores<CorridaContext>()
             .AddDefaultTokenProviders();
+
+        services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+        }).AddJwtBearer(options => {
+            options.TokenValidationParameters = new TokenValidationParameters()
+            {
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["SecurityKey"]))
+            };
+        });
+
+        services.AddAuthorization(auth => {
+            auth.AddPolicy("Bearer", new AuthorizationPolicyBuilder()
+                                         .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+                                         .RequireAuthenticatedUser()
+                                         .Build()
+            );
+        });
 
         return services;
     }

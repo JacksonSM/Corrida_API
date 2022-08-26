@@ -50,27 +50,27 @@ public class CorridaService : ICorridaService
         await _corridaCollection.UpdateOneAsync(c => c.Id == corridaId, update);
     }
 
-    public async Task<IEnumerable<Corrida>> ObterTodasCorridaBairro(string bairro)
+    public async Task<List<Corrida>> ObterTodasCorridaBairro(string bairro)
     {
        var corridas =  await _corridaCollection.FindAsync(c => c.Origem.Bairro.Equals(bairro) && c.Estado == "aberto");
-       return corridas.ToEnumerable();
+       return await corridas.ToListAsync();
     }
 
 
-    public async Task<IEnumerable<Corrida>> ObterTodasCorridaCidade(string cidade)
+    public async Task<List<Corrida>> ObterTodasCorridaCidade(string cidade)
     {
         var corridas = await _corridaCollection.FindAsync(c => c.Origem.Cidade.Equals(cidade) && c.Estado == "aberto");
-        return corridas.ToEnumerable();
+        return await corridas.ToListAsync();
     }
 
-    public async Task<IEnumerable<Corrida>> ObterTodasCorridaMototaxista(int mototaxistaId)
+    public async Task<List<Corrida>> ObterTodasCorridaMototaxista(int mototaxistaId)
     {
         var corridas = await _corridaCollection.FindAsync(c => c.MotoTaxistaId == mototaxistaId);
-        return corridas.ToEnumerable();
+        return await corridas.ToListAsync();
     }
-    public async Task<IEnumerable<Corrida>> ObterTodasCorridaPassageiro(int passageiroId)
+    public async Task<List<Corrida>> ObterTodasCorridaPassageiro(int passageiroId)
     {
         var corridas = await _corridaCollection.FindAsync(c => c.PassageiroId == passageiroId);
-        return corridas.ToEnumerable();
+        return await corridas.ToListAsync();
     }
 }

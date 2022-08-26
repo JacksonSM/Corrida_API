@@ -1,5 +1,6 @@
 ﻿using CorridaAPI.Model.CorridaContext;
 using CorridaAPI.Services.Contracts;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,6 +8,7 @@ namespace CorridaAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CorridaController : ControllerBase
     {
         private readonly ICorridaService _corridaService;

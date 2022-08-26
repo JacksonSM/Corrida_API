@@ -8,8 +8,8 @@ public interface ICorridaService
     Task AtulizarEstado(string corridaId, string estado, float? estrela);
     Task PegarCorrida(string corridaId, int mototaxistaId);
 
-    Task<IEnumerable<Corrida>> ObterTodasCorridaMototaxista(int mototaxistaId);
-    Task<IEnumerable<Corrida>> ObterTodasCorridaPassageiro(int passageiroId);
-    Task<IEnumerable<Corrida>> ObterTodasCorridaCidade(string cidade);
-    Task<IEnumerable<Corrida>> ObterTodasCorridaBairro(string bairro);
+    Task<List<Corrida>> ObterTodasCorridaMototaxista(int mototaxistaId);
+    Task<List<Corrida>> ObterTodasCorridaPassageiro(int passageiroId);
+    Task<List<Corrida>> ObterTodasCorridaCidade(string cidade);
+    Task<List<Corrida>> ObterTodasCorridaBairro(string bairro);
 }
