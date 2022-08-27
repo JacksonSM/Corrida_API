@@ -1,4 +1,5 @@
-﻿using CorridaAPI.Model.CorridaContext;
+﻿using CorridaAPI.Model;
+using CorridaAPI.Model.CorridaContext;
 
 namespace CorridaAPI.Services.Contracts;
 
@@ -8,8 +9,6 @@ public interface ICorridaService
     Task AtulizarEstado(string corridaId, string estado, float? estrela);
     Task PegarCorrida(string corridaId, int mototaxistaId);
 
-    Task<List<Corrida>> ObterTodasCorridaMototaxista(int mototaxistaId);
-    Task<List<Corrida>> ObterTodasCorridaPassageiro(int passageiroId);
-    Task<List<Corrida>> ObterTodasCorridaCidade(string cidade);
-    Task<List<Corrida>> ObterTodasCorridaBairro(string bairro);
+    Task<List<Corrida>> ObterTodasCorrida(RequestQuery requestQuery);
+
 }

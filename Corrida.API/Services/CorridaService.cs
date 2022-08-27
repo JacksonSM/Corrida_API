@@ -1,4 +1,5 @@
-﻿using CorridaAPI.Model.CorridaContext;
+﻿using CorridaAPI.Model;
+using CorridaAPI.Model.CorridaContext;
 using CorridaAPI.Services.Contracts;
 using CorridaAPI.Services.Helpers;
 using Microsoft.Extensions.Options;
@@ -56,21 +57,30 @@ public class CorridaService : ICorridaService
        return await corridas.ToListAsync();
     }
 
+    public async Task<List<Corrida>> ObterTodasCorrida(RequestQuery requestQuery)
+    {   
+        var filterBuilder = new FilterDefinitionBuilder<Corrida>();
+        var listfilter = new List<FilterDefinition<Corrida>>();
 
-    public async Task<List<Corrida>> ObterTodasCorridaCidade(string cidade)
-    {
-        var corridas = await _corridaCollection.FindAsync(c => c.Origem.Cidade.Equals(cidade) && c.Estado == "aberto");
-        return await corridas.ToListAsync();
-    }
+       
+        if(!string.IsNullOrEmpty(requestQuery.bairro))
+            listfilter.Add(filterBuilder.Eq(c => c.Origem.Bairro, requestQuery.bairro));
 
-    public async Task<List<Corrida>> ObterTodasCorridaMototaxista(int mototaxistaId)
-    {
-        var corridas = await _corridaCollection.FindAsync(c => c.MotoTaxistaId == mototaxistaId);
-        return await corridas.ToListAsync();
-    }
-    public async Task<List<Corrida>> ObterTodasCorridaPassageiro(int passageiroId)
-    {
-        var corridas = await _corridaCollection.FindAsync(c => c.PassageiroId == passageiroId);
-        return await corridas.ToListAsync();
+        if(!string.IsNullOrEmpty(requestQuery.cidade))
+            listfilter.Add(filterBuilder.Eq(c => c.Origem.Cidade, requestQuery.cidade));
+
+        if(requestQuery.mototaxistaId != null)
+            listfilter.Add(filterBuilder.Eq(c => c.MotoTaxistaId, requestQuery.mototaxistaId));
+
+        if(requestQuery.passageiroId != null)
+            listfilter.Add(filterBuilder.Eq(c => c.PassageiroId, requestQuery.passageiroId));
+
+        if(!string.IsNullOrEmpty(requestQuery.estado))
+            listfilter.Add(filterBuilder.Eq(c => c.Estado, requestQuery.estado));
+
+        if(listfilter.Count > 0)
+            return await _corridaCollection.Find(filterBuilder.And(listfilter)).ToListAsync();
+
+        return await _corridaCollection.Find(filterBuilder.Empty).ToListAsync(); 
     }
 }

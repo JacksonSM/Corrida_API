@@ -1,7 +1,7 @@
-﻿using CorridaAPI.Model.CorridaContext;
+﻿using CorridaAPI.Model;
+using CorridaAPI.Model.CorridaContext;
 using CorridaAPI.Services.Contracts;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CorridaAPI.Controllers
@@ -27,7 +27,7 @@ namespace CorridaAPI.Controllers
             {
                 _corridaService.Abrir(corrida);
             }
-            catch(Exception e) 
+            catch (Exception e)
             {
                 return UnprocessableEntity(e);
             }
@@ -36,6 +36,7 @@ namespace CorridaAPI.Controllers
             return Ok(corrida);
 
         }
+
         [HttpPost("{corridaId:length(24)}/{estado}/")]
         public async Task<IActionResult> AtualizarEstado(string corridaId, string estado, float? estrelas)
         {
@@ -43,42 +44,21 @@ namespace CorridaAPI.Controllers
             {
                 await _corridaService.AtulizarEstado(corridaId, estado, estrelas);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
 
             return Ok();
         }
-        [HttpGet("ObterTodasCorridaMototaxista")]
-        public async Task<IActionResult> ObterTodasCorridaMototaxista(int mototaxistaId)
-        {
-            var corridas = await _corridaService.ObterTodasCorridaMototaxista(mototaxistaId);
-            return Ok(corridas);
-        }
-        [HttpGet("ObterTodasCorridaPassageiro")]
-        public async Task<IActionResult> ObterTodasCorridaPassageiro(int passageiroId)
-        {
-            var corridas = await _corridaService.ObterTodasCorridaPassageiro(passageiroId);
-            if(corridas is null || corridas.Count() == 0) return NoContent();
 
-            return Ok(corridas);
-        }
-        [HttpGet("ObterTodasCorridaCidade")]
-        public async Task<IActionResult> ObterTodasCorridaCidade(string cidade)
+        [HttpGet]
+        public async Task<IActionResult> ObterTodasCorrida([FromQuery] RequestQuery query)
         {
-            var corridas = await _corridaService.ObterTodasCorridaCidade(cidade);
-            if (corridas is null || corridas.Count() == 0) return NoContent();
-
+            var corridas = await _corridaService.ObterTodasCorrida(query);
             return Ok(corridas);
         }
-        [HttpGet("ObterTodasCorridaBairro")]
-        public async Task<IActionResult> ObterTodasCorridaBairro(string bairro)
-        {
-            var corridas = await _corridaService.ObterTodasCorridaBairro(bairro);
-            if (corridas is null || corridas.Count() == 0) return NoContent();
 
-            return Ok(corridas);
-        }
+
     }
 }
