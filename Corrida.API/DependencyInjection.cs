@@ -1,4 +1,5 @@
 ﻿using CorridaAPI.Data;
+using CorridaAPI.Data.Contracts;
 using CorridaAPI.Model.Authentication;
 using CorridaAPI.Services;
 using CorridaAPI.Services.Contracts;
@@ -17,7 +18,7 @@ public static class DependencyInjection
     public static IServiceCollection AddServiceDependency(this IServiceCollection services)
     {
         services.AddScoped<ICorridaService, CorridaService>();
-
+        services.AddScoped<ISemearUsuarioPadrao, SemearUsuarioPadrao>();
 
         return services;
     }

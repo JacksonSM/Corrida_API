@@ -21,7 +21,6 @@ public class CorridaService : ICorridaService
 
     public async Task Abrir(Corrida novaCorrida) =>
     await _corridaCollection.InsertOneAsync(novaCorrida);
-
     public async Task AtulizarEstado(string corridaId, string estado, float? estrela)
     {
         var corrida = await _corridaCollection.Find(x => x.Id == corridaId).FirstOrDefaultAsync();
@@ -50,37 +49,29 @@ public class CorridaService : ICorridaService
              .Set(c => c.MotoTaxistaId, mototaxistaId);
         await _corridaCollection.UpdateOneAsync(c => c.Id == corridaId, update);
     }
-
-    public async Task<List<Corrida>> ObterTodasCorridaBairro(string bairro)
-    {
-       var corridas =  await _corridaCollection.FindAsync(c => c.Origem.Bairro.Equals(bairro) && c.Estado == "aberto");
-       return await corridas.ToListAsync();
-    }
-
-    public async Task<List<Corrida>> ObterTodasCorrida(RequestQuery requestQuery)
+    public async Task<List<Corrida>> ObterTodasCorrida(RequestQuery request)
     {   
-        var filterBuilder = new FilterDefinitionBuilder<Corrida>();
-        var listfilter = new List<FilterDefinition<Corrida>>();
+        var construtorFiltro = new FilterDefinitionBuilder<Corrida>();
+        var listaFiltros = new List<FilterDefinition<Corrida>>();
 
-       
-        if(!string.IsNullOrEmpty(requestQuery.bairro))
-            listfilter.Add(filterBuilder.Eq(c => c.Origem.Bairro, requestQuery.bairro));
+        if (!string.IsNullOrEmpty(request.cidade))
+            listaFiltros.Add(construtorFiltro.Eq(c => c.Origem.Cidade, request.cidade));
 
-        if(!string.IsNullOrEmpty(requestQuery.cidade))
-            listfilter.Add(filterBuilder.Eq(c => c.Origem.Cidade, requestQuery.cidade));
+        if (!string.IsNullOrEmpty(request.bairro))
+            listaFiltros.Add(construtorFiltro.Eq(c => c.Origem.Bairro, request.bairro));
 
-        if(requestQuery.mototaxistaId != null)
-            listfilter.Add(filterBuilder.Eq(c => c.MotoTaxistaId, requestQuery.mototaxistaId));
+        if(request.mototaxistaId != null)
+            listaFiltros.Add(construtorFiltro.Eq(c => c.MotoTaxistaId, request.mototaxistaId));
 
-        if(requestQuery.passageiroId != null)
-            listfilter.Add(filterBuilder.Eq(c => c.PassageiroId, requestQuery.passageiroId));
+        if(request.passageiroId != null)
+            listaFiltros.Add(construtorFiltro.Eq(c => c.PassageiroId, request.passageiroId));
 
-        if(!string.IsNullOrEmpty(requestQuery.estado))
-            listfilter.Add(filterBuilder.Eq(c => c.Estado, requestQuery.estado));
+        if(!string.IsNullOrEmpty(request.estado))
+            listaFiltros.Add(construtorFiltro.Eq(c => c.Estado, request.estado));
 
-        if(listfilter.Count > 0)
-            return await _corridaCollection.Find(filterBuilder.And(listfilter)).ToListAsync();
+        if(listaFiltros.Count == 0)
+            listaFiltros.Add(construtorFiltro.Empty);
 
-        return await _corridaCollection.Find(filterBuilder.Empty).ToListAsync(); 
+        return await _corridaCollection.Find(construtorFiltro.And(listaFiltros)).ToListAsync(); 
     }
 }

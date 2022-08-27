@@ -1,11 +1,10 @@
-﻿namespace CorridaAPI.Model
+﻿namespace CorridaAPI.Model;
+
+public class RequestQuery
 {
-    public class RequestQuery
-    {
-        public int? passageiroId { get; set; }
-        public int? mototaxistaId { get; set; }
-        public string? cidade { get; set; }
-        public string? bairro { get; set; }
-        public string? estado { get; set; }
-    }
+    public int? passageiroId { get; set; }
+    public int? mototaxistaId { get; set; }
+    public string? cidade { get; set; }
+    public string? bairro { get; set; }
+    public string? estado { get; set; }
 }

@@ -1,4 +1,5 @@
 using CorridaAPI;
+using CorridaAPI.Data.Contracts;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +26,7 @@ app.UseHttpsRedirection();
 
 app.UseStatusCodePages();
 
+SemearUsuariosPapeis(app);
 
 app.UseAuthentication();
 app.UseAuthorization();
@@ -32,3 +34,16 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+void SemearUsuariosPapeis(IApplicationBuilder app)
+{
+
+    
+    using (var service = app.ApplicationServices.CreateScope())
+    {
+        var semar = service.ServiceProvider
+                           .GetService<ISemearUsuarioPadrao>();
+        semar.SemearPapeis();
+        semar.SemearUsuarios();
+    }
+}
