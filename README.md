@@ -8,11 +8,11 @@ Obs: Usarei o MongoDB. por que acredito que ele seria ideal para esse tipo de pr
 
 ## Requisitos:
 
-* CRUD de corridas.
-* Autenticação por token JWT.
-* Retornar todas corridas concluidas pelo mototáxista.
-* Retornar todas corridas abertas pelo passageiro.
-* Retornar corridas aberto em uma deteminada cidade.
-* Retornar corridas aberto em uma deteminado bairro.
-* Permitir que o passageiro altere o estado da corrida(aberto/fechado/cancelado).
-* Permitir que o mototáxista pegue uma corrida.
+* CRUD de corridas. :ballot_box_with_check:
+* Autenticação por token JWT. :ballot_box_with_check:
+* Retornar todas corridas concluidas pelo mototáxista. :ballot_box_with_check:
+* Retornar todas corridas abertas pelo passageiro. :ballot_box_with_check:
+* Retornar corridas aberto em uma deteminada cidade. :ballot_box_with_check:
+* Retornar corridas aberto em uma deteminado bairro. :ballot_box_with_check:
+* Permitir que o passageiro altere o estado da corrida(aberto/fechado/cancelado). :ballot_box_with_check:
+* Permitir que o mototáxista pegue uma corrida. :ballot_box_with_check:
