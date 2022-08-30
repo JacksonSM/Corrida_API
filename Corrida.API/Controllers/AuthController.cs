@@ -66,6 +66,9 @@ public class AuthController : ControllerBase
 
         
     }
+
+
+
     private TokenModel GerarToken(ApplicationUser usuario,IConfiguration configuration)
     {
         var claims = new[] {
